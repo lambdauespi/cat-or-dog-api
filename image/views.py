@@ -11,14 +11,18 @@ from django.conf import settings
 import copy
 import cloudinary.uploader
 from keras.preprocessing import image
+import tensorflow as tf
 import numpy as np
 
 
 # Create your views here.
 
-cnn_model = copy.copy(settings.CNN_MODEL)
+# cnn_model = copy.copy(settings.CNN_MODEL)
+cnn_model = tf.lite.Interpreter(model_path='api/cnn/gato_cachorro.tflite')
+cnn_model.allocate_tensors()
 img_width = 128
 img_height = 128
+file_types = ['png','jpg','jpeg']
 
 class ImageList(APIView):
     serializer_class = ImageSerializer
@@ -37,18 +41,52 @@ class ImagePredict(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
+                ## modelo novo
+                in_index = cnn_model.get_input_details()[0]["index"]
+                out_index = cnn_model.get_output_details()[0]["index"]
+                ## ..
+                
                 img_req = request.FILES['imageFile']
+                if(img_req.name.split(".")[-1].lower() not in file_types):
+                    return Response({'message': 'Certifique-se que sua imagem está entre os formatos de PNG, JPG ou JPEG'}, status.HTTP_400_BAD_REQUEST)
+                
                 img = image.load_img(img_req, target_size = (img_width, img_height))
                 img = image.img_to_array(img)
                 img = np.expand_dims(img, axis = 0)
-                x = cnn_model.predict_classes(img)
-                if(x[0][0] == 0):
+                
+                ## modelo novo
+                img = img.astype('float32')
+
+                img = img/255
+                
+                cnn_model.set_tensor(in_index, img)
+                cnn_model.invoke()
+                x = cnn_model.get_tensor(out_index)[0]
+                limite = 0.96
+                ## ..
+                
+                ## modelo velho
+                # x = cnn_model.predict_classes(img)
+                # if(x[0][0] == 0):
+                #     ans = "Gato"
+                # elif(x[0][0] == 1):
+                #     ans = "Cachorro"
+                # else:
+                #     ans = "Não foi possível reconhecer"
+                # return Response({"prediction":ans}, status.HTTP_200_OK)
+                ## ..
+                if x[0] > limite and x[0] > x[1]:
                     ans = "Gato"
-                elif(x[0][0] == 1):
+                    percent = x[0]
+                elif x[1] > limite and x[1] > x[1]:
                     ans = "Cachorro"
+                    percent = x[1]
                 else:
-                    ans = "Não foi possível reconhecer"
-                return Response({"prediction":ans}, status.HTTP_200_OK)
+                    ans = "Não foi possível reconhcer"
+                    percent = 0
+                
+                return Response({"prediction":ans, "percent_cat":x[0], "percent_dog":x[1]}, status.HTTP_200_OK)
+                
             except Exception as message:
                 return Response({'message': 'Certifique-se que enviou uam imagem'}, status.HTTP_400_BAD_REQUEST)
             
