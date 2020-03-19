@@ -1,4 +1,4 @@
-# Cat or dog Api
+# Cat or Dog Api
 
 # THE BEGINNING:
 
