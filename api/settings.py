@@ -31,7 +31,7 @@ def _load_model_from_path(path):
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7=18p5(aqypmrz8&vjvw7yugr=55uzui9+p)!!r^1oo!p8qb39'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -64,9 +64,9 @@ MIDDLEWARE = [
 ]
 
 cloudinary.config(
-    cloud_name="dtjvewzqe",
-    api_key="195868453646956",
-    api_secret="zr5bWGqbVW0SuL8kw552G1KEUmM"
+    cloud_name="",
+    api_key="",
+    api_secret=""
 )
 
 ROOT_URLCONF = 'api.urls'
