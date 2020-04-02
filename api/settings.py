@@ -16,24 +16,22 @@ import django_heroku
 import cloudinary  # cloudinary
 import cloudinary.uploader  # cloudinary
 import cloudinary.api  # cloudinary
-import tensorflow as tf
-import numpy as np
 from keras.models import load_model
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def load_model_from_path(path):
+def _load_model_from_path(path):
     return load_model(path)
 
 
-# CNN_MODEL = load_model_from_path('api/cnn/gato_cachorro.h5')
+# CNN_MODEL = _load_model_from_path('api/cnn/gato_cachorro.h5')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'secret_key'
+SECRET_KEY = '7=18p5(aqypmrz8&vjvw7yugr=55uzui9+p)!!r^1oo!p8qb39'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -66,9 +64,9 @@ MIDDLEWARE = [
 ]
 
 cloudinary.config(
-    cloud_name="claud_name",
-    api_key="api_key",
-    api_secret="api_secret"
+    cloud_name="dtjvewzqe",
+    api_key="195868453646956",
+    api_secret="zr5bWGqbVW0SuL8kw552G1KEUmM"
 )
 
 ROOT_URLCONF = 'api.urls'
@@ -141,5 +139,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Activate Django-Heroku.
-django_heroku.settings(locals())

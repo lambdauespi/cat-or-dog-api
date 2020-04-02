@@ -78,7 +78,7 @@ class ImagePredict(APIView):
                 if x[0] > limite and x[0] > x[1]:
                     ans = "Gato"
                     percent = x[0]
-                elif x[1] > limite and x[1] > x[1]:
+                elif x[1] > limite and x[1] > x[0]:
                     ans = "Cachorro"
                     percent = x[1]
                 else:
